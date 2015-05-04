@@ -4,7 +4,7 @@
   "description": "A strong api builder for express with parameter type-casting, validations and more",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,9 @@
     "express": "^4.12.3",
     "lodash": "^3.8.0",
     "validator": "^3.39.0"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "mocha": "^2.2.4"
   }
 }
