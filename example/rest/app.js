@@ -8,9 +8,11 @@
 var express = require('express');
 var app = express();
 app.disable('x-powered-by');
-var remotes = require('./remotes');
+var poplar = require('./poplar');
 
-app.use(remotes.handler('rest'));
+var api = new poplar();
+
+app.use(api.handler('rest'));
 app.use(express.static('public'));
 
 app.listen(3000);
