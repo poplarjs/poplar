@@ -81,6 +81,24 @@ describe('Entity', function() {
 
     });
 
+    it('should throw an error if field name is not valid', function() {
+      var fn = function() {
+        var args = arguments;
+        return function() {
+          SomeEntity.add.call(SomeEntity, args);
+        };
+      };
+      expect(fn('')).to.throw(Error);
+      expect(fn({})).to.throw(Error);
+      expect(fn(function(){})).to.throw(Error);
+      expect(fn(false)).to.throw(Error);
+      expect(fn([])).to.throw(Error);
+      expect(fn('-')).to.throw(Error);
+      expect(fn('&')).to.throw(Error);
+      expect(fn('!fdsf)')).to.throw(Error);
+      expect(fn('name', 'value', '!fdsf)')).to.throw(Error);
+    });
+
     it('should throw an error when use function for multi-attribute', function() {
       var fn = function() {
         SomeEntity.add('name', 'age', 'gender', function(obj){ return obj; });
