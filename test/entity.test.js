@@ -1,5 +1,6 @@
 var chai = require('chai');
 var _ = require('lodash');
+var util = require('util');
 
 var Entity = require('../lib/entity');
 
@@ -23,6 +24,7 @@ describe('Entity', function() {
 
     it('should be false if obj is not an Entity', function() {
       expect(Entity.isEntity('string')).to.equal(false);
+      expect(Entity.isEntity('')).to.equal(false);
       expect(Entity.isEntity(1)).to.equal(false);
       expect(Entity.isEntity(false)).to.equal(false);
       expect(Entity.isEntity(true)).to.equal(false);
@@ -128,7 +130,110 @@ describe('Entity', function() {
   })
 
   describe('#parse(input, options, converter)', function() {
+    var UserEntity, SocialEntity;
 
+    beforeEach(function() {
+      UserEntity = new Entity();
+      UserEntity.add('name', 'city');
+      UserEntity.add('age', { default: 0 });
+      UserEntity.add('gender', { default: 'unknown' });
+      UserEntity.add('isAdult', function(obj, options) {
+        return (obj && obj.age >= 18 ? true : false);
+      });
+      UserEntity.add('points', { value: 100, if: function(obj, options) {
+        return obj && obj.age >= 18;
+      } });
+      UserEntity.add('description', { as: 'introduction' });
+      UserEntity.add('isSignedIn', function(obj, options) {
+        return (options && options.isSignedIn ? true : false);
+      });
+      UserEntity.add('birthday', { default: new Date('2015-10-10 10:00:00') });
+
+      SocialEntity = new Entity();
+      SocialEntity.add('qq', 'skype', 'facebook', 'twitter');
+
+      UserEntity.add('social', { using: SocialEntity });
+    })
+
+    it('should only return exposed fields', function() {
+      var user = {
+        name: 'Felix Liu',
+        age: 18,
+        city: 'Shanghai',
+        state: 'Shanghai'
+      };
+
+      var result = UserEntity.parse(user);
+      expect(result).to.have.property('name', 'Felix Liu');
+      expect(result).to.have.property('city', 'Shanghai');
+      expect(result).to.have.property('age', 18);
+      expect(result).to.not.have.property('state');
+    });
+
+    it('should return default value', function() {
+      expect(UserEntity.parse({})).to.have.property('gender', 'unknown');
+    });
+
+    it('should return exposed fields by if confition and :value option', function() {
+      var user = { age: 18 };
+      var user1 = { age: 16 };
+
+      expect(UserEntity.parse(user)).to.have.property('points', 100);
+      expect(UserEntity.parse(user1)).to.not.have.property('points');
+    });
+
+    it('should return exposed fields value by function', function() {
+      var user = { age: 18 };
+      var user1 = { age: 16 };
+
+      expect(UserEntity.parse(user)).to.have.property('isAdult', true);
+      expect(UserEntity.parse(user1)).to.have.property('isAdult', false);
+    });
+
+    it('should return aliased fields', function() {
+      var user = { description: 'A programer who lives in Shanghai' };
+
+      var result = UserEntity.parse(user);
+      expect(result).to.have.property('introduction', user.description);
+      expect(result).to.not.have.property('description');
+    });
+
+    it('should return fields based on options', function() {
+      expect(UserEntity.parse({}, { isSignedIn: true })).to.have.property('isSignedIn', true);
+      expect(UserEntity.parse({}, { isSignedIn: false })).to.have.property('isSignedIn', false);
+    });
+
+    it('should return subfields based on used Entity', function() {
+      var user = { social: { qq: 66666666, skype: 'mySkype', facebook: 'myFacebook', twitter: 'myTwitter', tumblr: 'myTumblr' } };
+      var user1 = { social: [{ qq: 66666666, skype: 'mySkype', facebook: 'myFacebook', twitter: 'myTwitter', tumblr: 'myTumblr' }] };
+
+      var result = UserEntity.parse(user);
+      var result1 = UserEntity.parse(user1);
+
+      expect(result).to.have.deep.property('social.qq', user.social.qq);
+      expect(result).to.have.deep.property('social.skype', user.social.skype);
+      expect(result).to.have.deep.property('social.facebook', user.social.facebook);
+      expect(result).to.have.deep.property('social.twitter', user.social.twitter);
+      expect(result).to.not.have.deep.property('social.tumblr');
+
+      expect(result1).to.have.deep.property('social[0].qq', user1.social[0].qq);
+      expect(result1).to.have.deep.property('social[0].skype', user1.social[0].skype);
+      expect(result1).to.have.deep.property('social[0].facebook', user1.social[0].facebook);
+      expect(result1).to.have.deep.property('social[0].twitter', user1.social[0].twitter);
+      expect(result1).to.not.have.deep.property('social[0].tumblr');
+    });
+
+    it('should convert field value based on converter', function() {
+      var converter = function(val, options) {
+        if (val instanceof Date) {
+          return util.format('%s-%s-%s', val.getUTCFullYear(), val.getUTCMonth() + 1, val.getUTCDate());
+        }
+        return val;
+      };
+
+      expect(UserEntity.parse({}, converter)).to.have.property('birthday', '2015-10-10');
+      expect(UserEntity.parse({}, {}, converter)).to.have.property('birthday', '2015-10-10');
+    })
   });
 
 })
