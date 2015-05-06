@@ -65,9 +65,10 @@ UserApi.before('*', function(ctx, next) {
 
 api.use(UserApi);
 
-module.exports = api;
+app.use(api.handler('rest'));
+app.use(express.static('public'));
 
-// app.use(api.handler('rest'));
-// app.use(express.static('public'));
-//
-// app.listen(3000);
+app.listen(3000);
+
+exports.api = api;
+exports.app = app;
