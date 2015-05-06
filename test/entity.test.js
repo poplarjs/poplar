@@ -1,5 +1,4 @@
 var chai = require('chai');
-var _ = require('lodash');
 var util = require('util');
 
 var Entity = require('../lib/entity');
