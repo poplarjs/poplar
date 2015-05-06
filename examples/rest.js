@@ -7,15 +7,15 @@
 
 var express = require('express');
 var util = require('util');
-var poplar = require('./../lib/poplar');
+var poplar = require('./../');
 
 var app = express();
 var api = poplar.create();
 
 app.disable('x-powered-by');
 
-var Entity = require('./../lib/entity');
-var ApiBuilder = require('./../lib/api_builder');
+var Entity = poplar.Entity;
+var ApiBuilder = poplar.ApiBuilder;
 
 // 用户接口数据返回
 var UserEntity = new Entity({
@@ -47,7 +47,7 @@ UserApi.define('info', {
   presenter: UserEntity,
   returns: 'raw'
 }, function(params, cb) {
-  return {
+  cb({
     username: 'Felix Liu',
     age: 25,
     description: 'A programer who lives in Shanghai',
@@ -55,7 +55,7 @@ UserApi.define('info', {
     lastName: 'Liu',
     creditCard: 88888888888888,
     gender: 'male'
-  };
+  });
 });
 
 UserApi.before('*', function(ctx, next) {
@@ -65,10 +65,10 @@ UserApi.before('*', function(ctx, next) {
 
 api.use(UserApi);
 
-app.use(api.handler('rest'));
-app.use(express.static('public'));
+// app.use(api.handler('rest'));
+// app.use(express.static('public'));
 
-app.listen(3000);
+// app.listen(3000);
 
 exports.api = api;
 exports.app = app;
