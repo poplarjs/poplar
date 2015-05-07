@@ -36,16 +36,23 @@ var UserEntity = new Entity({
 });
 
 var UserApi = new ApiBuilder('users', {
-  basicPath: '/u'
+  basePath: '/users'
 });
 
 UserApi.define('info', {
   accepts: [
-    { arg: 'id', type: 'number', validates: { require: { message: 'id 不能为空' } }, description: 'Get Username' }
+    {
+      arg: 'id',
+      type: 'number',
+      validates: { require: { message: 'id can\'t be empty' } },
+      description: 'Get Username'
+    }
   ],
   http: { path: 'info', verb: 'get' },
   presenter: UserEntity,
-  returns: 'raw'
+  returns: function(ctx, cb) {
+    ctx.res.send(ctx.result);
+  }
 }, function(params, cb) {
   cb(null, {
     username: 'Felix Liu',
