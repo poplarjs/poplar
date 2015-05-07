@@ -21,7 +21,7 @@ var ApiBuilder = poplar.ApiBuilder;
 var UserEntity = new Entity({
   username: true,
   age: true,
-  description: { as: 'selfIntroduction' },
+  description: { as: 'introduction' },
   nation: { value: 'China' },
   gender: { default: 'unknown' },
   fullname: function(obj) {
@@ -41,13 +41,13 @@ var UserApi = new ApiBuilder('users', {
 
 UserApi.define('info', {
   accepts: [
-    { arg: 'id', type: 'integer', validates: { require: { message: 'id 不能为空' } }, description: 'Get Username' }
+    { arg: 'id', type: 'number', validates: { require: { message: 'id 不能为空' } }, description: 'Get Username' }
   ],
   http: { path: 'info', verb: 'get' },
   presenter: UserEntity,
   returns: 'raw'
 }, function(params, cb) {
-  cb({
+  cb(null, {
     username: 'Felix Liu',
     age: 25,
     description: 'A programer who lives in Shanghai',
@@ -63,12 +63,23 @@ UserApi.before('*', function(ctx, next) {
   next();
 });
 
+UserApi.before('info', function(ctx, next) {
+  console.log('before.users.info called');
+  next();
+});
+
+UserApi.after('info', function(ctx, next) {
+  console.log('after.users.info called');
+  next();
+});
+
+
 api.use(UserApi);
 
-// app.use(api.handler('rest'));
-// app.use(express.static('public'));
+app.use(api.handler('rest'));
+app.use(express.static('public'));
 
-// app.listen(3000);
+app.listen(3000);
 
 exports.api = api;
 exports.app = app;
