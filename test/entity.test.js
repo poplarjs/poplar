@@ -253,4 +253,4 @@ describe('Entity', function() {
     })
   });
 
-})
+});

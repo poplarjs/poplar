@@ -67,4 +67,4 @@ describe('Validate()', function() {
     expect(errors.asJSON()).to.have.deep.property('number.isInt');
   });
 
-})
+});
