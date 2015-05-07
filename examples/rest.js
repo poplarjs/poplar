@@ -83,7 +83,26 @@ UserApi.after('info', function(ctx, next) {
 
 api.use(UserApi);
 
-app.use(api.handler('rest'));
+app.use(api.handler('rest', {
+  errorHandler: function(err, req, res, next) {
+    if (err) {
+      err.validations = err.validations || {};
+      if (err.validations.errors) {
+        res.statusCode = 422;
+      } else {
+        res.statusCode = 500;
+      }
+      res.send({
+        status: res.statusCode,
+        message: err.validations.message || err.message || 'An unknown error occurred',
+        errors: err.validations.errors || err.stack
+      });
+    } else {
+      next();
+    }
+  }
+}));
+
 app.use(express.static('public'));
 
 app.listen(3000);
