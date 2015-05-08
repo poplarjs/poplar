@@ -64,8 +64,9 @@ UserApi.define('info', {
   presenter: UserEntity,
   returns: function(ctx, cb) {
     ctx.res.send({
-      ResponseData: ctx.result
+      data: ctx.result
     });
+    cb();
   }
 }, function(params, cb) {
   cb(null, {
