@@ -9,4 +9,4 @@ Poplar (白杨树)
 
 > Under active development
 
-A strong api builder for express with parameter type-casting, validations and more
+A powerful and customizable Rest API framework built on top of express, supports validations, api presenters e.g.
