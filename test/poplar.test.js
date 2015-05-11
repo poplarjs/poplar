@@ -202,17 +202,17 @@ describe('Poplar', function() {
       });
     });
 
-    it('should return all before hooks for target method', function() {
+    it('should return all before hooks\' name for target method', function() {
       expect(poplar.searchListenerTree(method.fullName(), 'before')).to.have.length(1);
       expect(poplar.searchListenerTree(method.fullName(), 'before')).to.eql(['before.test.method']);
     });
 
-    it('should return all after hooks for target method', function() {
+    it('should return all after hooks\' name for target method', function() {
       expect(poplar.searchListenerTree(method.fullName(), 'after')).to.have.length(1);
       expect(poplar.searchListenerTree(method.fullName(), 'after')).to.eql(['after.test.method']);
     });
 
-    it('should return all afterError hooks for target method', function() {
+    it('should return all afterError hooks\' name for target method', function() {
       expect(poplar.searchListenerTree(method.fullName(), 'afterError')).to.have.length(1);
       expect(poplar.searchListenerTree(method.fullName(), 'afterError')).to.eql(['afterError.test.method']);
     });
