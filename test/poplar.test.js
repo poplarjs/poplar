@@ -106,13 +106,6 @@ describe('Poplar', function() {
     });
   });
 
-  describe('#after(methodMatch, fn)', function() {
-    it('should add a after hook', function() {
-      poplar.after('users.login', function(ctx, next) { return; });
-      expect(poplar._events).to.have.property('after.users.login')
-    });
-  });
-
   describe('#execHooks(when, method, ctx, next)', function() {
     var expectedResult = ['before_method_1', 'before_method_2', 'method', 'after_method_1', 'after_method_2', 'afterError'];
     var result, method;
