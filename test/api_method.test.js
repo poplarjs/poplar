@@ -2,6 +2,7 @@ var chai = require('chai');
 var util = require('util');
 
 var ApiMethod = require('../lib/api_method');
+var ApiBuilder = require('../lib/api_builder');
 var Entity = require('../lib/entity');
 
 var expect = chai.expect;
@@ -61,7 +62,7 @@ describe('ApiMethod', function() {
   });
 
   describe('#prototype', function() {
-    describe('#clone', function() {
+    describe('#clone()', function() {
       it('should create a clone of an existing method', function() {
         var apiMethod = new ApiMethod('name', { accepts: [{ isString: {} }] }, function(params, next) { next(params); });
         var apiMethodClone = apiMethod.clone();
@@ -73,6 +74,30 @@ describe('ApiMethod', function() {
         expect(apiMethodClone).to.have.property('presenter', apiMethod.presenter);
         expect(apiMethodClone).to.have.property('notes', apiMethod.notes);
         expect(apiMethodClone.fn.toString()).to.eql(apiMethod.fn.toString());
+      });
+    });
+
+    describe('#fullName()', function() {
+      it('should return fullName with ApiBuilder', function() {
+        var fn = function() {};
+        var apiBuilder = new ApiBuilder('test');
+        var apiMethod = new ApiMethod('method', {}, fn);
+        var apiMethod1 = new ApiMethod('method1', {}, fn);
+        apiMethod.setApiBuilder(apiBuilder);
+        expect(apiMethod.fullName()).to.equal('test.method');
+        expect(apiMethod1.fullName).to.throw(Error);
+      });
+    });
+
+    describe('#fullPath()', function() {
+      it('should return fullPath with ApiBuilder', function() {
+        var fn = function() {};
+        var apiBuilder = new ApiBuilder('test');
+        var apiMethod = new ApiMethod('method', { http: { path: 'method' } }, fn);
+        var apiMethod1 = new ApiMethod('method1', {}, fn);
+        apiMethod.setApiBuilder(apiBuilder);
+        expect(apiMethod.fullPath()).to.equal('/test/method');
+        expect(apiMethod1.fullPath).to.throw(Error);
       });
     });
   });
