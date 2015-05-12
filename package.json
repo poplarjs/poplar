@@ -16,6 +16,8 @@
     "poplar",
     "express",
     "validations",
+    "presenter",
+    "entity",
     "documentation"
   ],
   "author": "Felix Liu",
