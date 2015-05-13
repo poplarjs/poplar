@@ -1,9 +1,12 @@
 var chai = require('chai');
 var util = require('util');
+var express = require('express');
+var request = require('supertest');
 
 var ApiMethod = require('../lib/api_method');
 var ApiBuilder = require('../lib/api_builder');
 var Entity = require('../lib/entity');
+var HttpContext = require('../lib/contexts/http');
 
 var expect = chai.expect;
 
@@ -61,6 +64,24 @@ describe('ApiMethod', function() {
     });
   });
 
+  describe('#getType()', function() {
+    it('should return cooresponding type for obj', function() {
+      expect(ApiMethod.getType(undefined)).to.equal('undefined');
+      expect(ApiMethod.getType(null)).to.equal('null');
+      expect(ApiMethod.getType({})).to.equal('object');
+      expect(ApiMethod.getType([])).to.equal('array');
+      expect(ApiMethod.getType(new Array())).to.equal('array');
+      expect(ApiMethod.getType('')).to.equal('string');
+      expect(ApiMethod.getType(true)).to.equal('boolean');
+      expect(ApiMethod.getType(false)).to.equal('boolean');
+      expect(ApiMethod.getType(1)).to.equal('number');
+      expect(ApiMethod.getType(-1)).to.equal('number');
+      expect(ApiMethod.getType(0)).to.equal('number');
+      expect(ApiMethod.getType(function(){})).to.equal('function');
+      expect(ApiMethod.getType(new Date())).to.equal('date');
+    });
+  });
+
   describe('#prototype', function() {
     describe('#clone()', function() {
       it('should create a clone of an existing method', function() {
@@ -100,5 +121,109 @@ describe('ApiMethod', function() {
         expect(apiMethod1.fullPath).to.throw(Error);
       });
     });
+
+    describe('#invoke()', function() {
+      it('should return all errors message, if failed validtions', givenMethodExpect({
+        input: 'ddg',
+        expectedValue: {
+          validations: {
+            errors: {
+              email: {
+                domainRestriction: "email must be xxx@mydomain.org",
+                isEmail: "email is not valid",
+                isLength: "length should longer than 7 and less than 30"
+              }
+            },
+            message: "email is not valid; length should longer than 7 and less than 30; email must be xxx@mydomain.org"
+          }
+        }
+      }));
+
+      it('should pass isLenght, if length longer than 7 and less than 30', givenMethodExpect({
+        input: 'ddddddd',
+        expectedValue: {
+          validations: {
+            errors: {
+              email: {
+                domainRestriction: "email must be xxx@mydomain.org",
+                isEmail: "email is not valid",
+              }
+            },
+            message: "email is not valid; email must be xxx@mydomain.org"
+          }
+        }
+      }));
+
+      it('should pass isEmail, if email is valid', givenMethodExpect({
+        input: 'd@d.cc',
+        expectedValue: {
+          validations: {
+            errors: {
+              email: {
+                domainRestriction: "email must be xxx@mydomain.org",
+                isLength: "length should longer than 7 and less than 30"
+              }
+            },
+            message: "length should longer than 7 and less than 30; email must be xxx@mydomain.org"
+          }
+        }
+      }));
+
+      it('should return expected value, if pass validtions', givenMethodExpect({
+        input: 'ddd@mydomain.org',
+        expectedValue: {
+            myEmail: 'ddd@mydomain.org'
+        }
+      }));
+    });
   });
 });
+
+function givenMethodExpect(options) {
+  return function(done) {
+    var method = new ApiMethod('testMethod', {
+      accepts: [
+        {
+          arg: 'email',
+          type: 'string',
+          validates: {
+            isEmail: { message: 'email is not valid' },
+            isLength: { args: [7, 30], message: 'length should longer than 7 and less than 30' },
+            domainRestriction: function(val) {
+              if (val && val.split('@')[1] === 'mydomain.org') return;
+              return 'email must be xxx@mydomain.org';
+            }
+          }
+        }
+      ]
+    }, function(params, next) {
+      next(null, {
+        myEmail: params.email
+      });
+    });
+
+    var apiBuilder = new ApiBuilder();
+
+    method.setApiBuilder(apiBuilder);
+
+    var app = express();
+
+    app.get('/', function(req, res) {
+      var ctx = new HttpContext(req, res, method);
+      try {
+        method.invoke(ctx, function(err, result) {
+          if (err) {
+            expect(err).to.eql(options.expectedValue);
+          } else {
+            expect(result).to.eql(options.expectedValue);
+          }
+          done();
+        });
+      } catch (e) {
+        return done(e);
+      }
+    });
+
+    request(app).get('/?email=' + options.input).end();
+  };
+}
