@@ -15,6 +15,7 @@ describe('Validate()', function() {
     {
       arg: 'age',
       validates: {
+        isInt: true,
         largerThan20: function(val) {
           if (val > 20) return;
           return 'age should larger than 20';
@@ -47,6 +48,8 @@ describe('Validate()', function() {
     expect(errors.asJSON()).to.have.property('name');
     expect(errors.any()).to.equal(true);
     expect(errors.asJSON()).to.have.deep.property('name.require', 'name is required');
+    expect(errors.flatten()).to.eql(["name is required", "number: 'require' validation failed"]);
+    expect(errors.toHuman()).to.eql("name is required; number: 'require' validation failed");
   });
 
   it('should return error, if age is present and less than 20', function() {
