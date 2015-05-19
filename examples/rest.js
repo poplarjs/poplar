@@ -49,7 +49,7 @@ UserApi.define('info', {
       arg: 'id',
       type: 'number',
       validates: {
-        require: { message: 'id can\'t be empty' },
+        required: { message: 'id can\'t be empty' },
         isInt: { message: 'id must be a integer' },
         largerThan20: function(val) {
           if (val <= 20) {
