@@ -1,3 +1,8 @@
+1.0.2
+-----------
+
+- Add `presenterSource` to ApiMethod options and cooresponding tests
+
 1.0.1
 -----------
 

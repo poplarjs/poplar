@@ -172,7 +172,34 @@ describe('ApiMethod', function() {
       it('should return expected value, if pass validtions', givenMethodExpect({
         input: 'ddd@mydomain.org',
         expectedValue: {
+          myEmail: 'ddd@mydomain.org'
+        }
+      }));
+
+      it('should return expected value, if use presenterSource', givenMethodExpect({
+        input: 'ddd@mydomain.org',
+        presenterSource: 'data[0]',
+        returnValue: {
+          data: [{
             myEmail: 'ddd@mydomain.org'
+          }]
+        },
+        expectedValue: {
+          data: [{
+            myEmail: 'ddd@mydomain.org'
+          }]
+        }
+      }));
+
+      it('should return expected value, if not use presenterSource', givenMethodExpect({
+        input: 'ddd@mydomain.org',
+        returnValue: {
+          data: [{
+            myEmail: 'ddd@mydomain.org'
+          }]
+        },
+        expectedValue: {
+          myEmail: null
         }
       }));
     });
@@ -181,7 +208,12 @@ describe('ApiMethod', function() {
 
 function givenMethodExpect(options) {
   return function(done) {
+    var emailEntity = new Entity();
+    emailEntity.expose('myEmail', { default: null });
+
     var method = new ApiMethod('testMethod', {
+      presenter: emailEntity,
+      presenterSource: options.presenterSource,
       accepts: [
         {
           arg: 'email',
@@ -197,9 +229,13 @@ function givenMethodExpect(options) {
         }
       ]
     }, function(params, next) {
-      next(null, {
-        myEmail: params.email
-      });
+      if (options.returnValue) {
+        next(null, options.returnValue);
+      } else {
+        next(null, {
+          myEmail: params.email
+        });
+      }
     });
 
     var apiBuilder = new ApiBuilder();

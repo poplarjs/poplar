@@ -57,9 +57,10 @@ UserApi.define('info', {
           }
         }
       },
-      description: 'Get Username'
+      description: 'user id'
     }
   ],
+  description: 'Get user info',
   http: { path: 'info', verb: 'get' },
   presenter: UserEntity,
   returns: function(ctx, cb) {

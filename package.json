@@ -1,6 +1,6 @@
 {
   "name": "poplar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A powerful and customizable Rest API framework built on top of express, supports validations, api presenters e.g.",
   "main": "index.js",
   "scripts": {
