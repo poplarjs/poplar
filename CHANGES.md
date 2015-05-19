@@ -1,3 +1,8 @@
+1.1.1
+-----------
+
+- Allow validation required to be a function
+
 1.1.0
 -----------
 
