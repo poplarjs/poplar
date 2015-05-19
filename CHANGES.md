@@ -1,3 +1,8 @@
+1.0.4
+-----------
+
+- Add params argument to validation custom function
+
 1.0.3
 -----------
 
