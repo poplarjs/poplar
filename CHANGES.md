@@ -1,3 +1,8 @@
+1.1.2
+-----------
+
+- Add args to entity options
+
 1.1.1
 -----------
 
