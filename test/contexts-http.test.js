@@ -89,14 +89,36 @@ describe('HttpContext', function() {
         input: '1.1.1',
         expectedValue: NaN
       }));
+
+      it('should coerce invalid number strings as default value', givenMethodExpectArg({
+        type: 'number',
+        input: '1.1.1',
+        useDefault: true,
+        default: 10,
+        expectedValue: 10
+      }));
+
+      it('should coerce invalid number strings and ignore default value', givenMethodExpectArg({
+        type: 'number',
+        input: '1',
+        useDefault: true,
+        default: 10,
+        expectedValue: 1
+      }));
     });
   });
 });
 
 function givenMethodExpectArg(options) {
+  var accepts;
+  if (options && options.useDefault) {
+    accepts = [{arg: 'testArg', type: options.type, default: options.default}];
+  } else {
+    accepts = [{arg: 'testArg', type: options.type}];
+  }
   return function(done) {
     var method = new ApiMethod('testMethod', {
-      accepts: [{arg: 'testArg', type: options.type}]
+      accepts: accepts
     }, function() {});
 
     var app = require('express')();
