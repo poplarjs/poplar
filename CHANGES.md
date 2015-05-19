@@ -1,3 +1,8 @@
+1.0.3
+-----------
+
+- Fix broken tests and bug under node version 0.10
+
 1.0.2
 -----------
 
