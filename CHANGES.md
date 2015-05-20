@@ -1,3 +1,8 @@
+1.1.3
+-----------
+
+- Fix Entity parse bug, options will lost when parsing array object
+
 1.1.2
 -----------
 
