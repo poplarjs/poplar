@@ -12,7 +12,41 @@ describe('Entity', function() {
   beforeEach(function() {
     SomeEntity = new Entity();
     SomeOtherEntity = new Entity();
-  })
+  });
+
+  describe('#constructor', function() {
+
+    it('should be able to add fields via initialization', function() {
+      var newEntity = new Entity({
+        name: true,
+        sex: { as: 'gender' },
+        age: { default: 18 },
+        isAdult: function(obj) { return obj.age >= 18 ? true : false; },
+        girlfriend: { default: true, if: function(obj) { return obj.age >= 16 ? true : false; } },
+        social: [{ using: SomeEntity }, function(obj, options) { return {}; }]
+      });
+
+      var obj1 = newEntity.parse({ name: 'Felix Liu', sex: 'male', age: 20, skype: 'mySkype' });
+      var obj2 = newEntity.parse({ name: 'Felix Liu', sex: 'male', age: 15 });
+
+      expect(obj1).to.have.property('name', 'Felix Liu');
+      expect(obj1).to.have.property('gender', 'male');
+      expect(obj1).to.have.property('age', 20);
+      expect(obj1).to.have.property('isAdult', true);
+      expect(obj1).to.have.property('girlfriend', true);
+      expect(obj1).to.not.have.property('mySkype');
+      expect(obj2).to.not.have.property('girlfriend');
+    });
+
+    it('should be false if obj is not an Entity', function() {
+      expect(Entity.isEntity('string')).to.equal(false);
+      expect(Entity.isEntity('')).to.equal(false);
+      expect(Entity.isEntity(1)).to.equal(false);
+      expect(Entity.isEntity(false)).to.equal(false);
+      expect(Entity.isEntity(true)).to.equal(false);
+      expect(Entity.isEntity({})).to.equal(false);
+    });
+  });
 
   describe('#isEntity(obj)', function() {
 

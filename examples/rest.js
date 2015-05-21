@@ -7,10 +7,14 @@
 
 var express = require('express');
 var util = require('util');
+
+
 var poplar = require('./../');
 
 var app = express();
-var api = poplar.create();
+
+var apiV1 = poplar.create();
+var apiV2 = poplar.create();
 
 app.disable('x-powered-by');
 
@@ -44,14 +48,26 @@ UserApi.define('info', {
     {
       arg: 'id',
       type: 'number',
-      validates: { require: { message: 'id can\'t be empty' } },
-      description: 'Get Username'
+      validates: {
+        required: { message: 'id can\'t be empty' },
+        isInt: { message: 'id must be a integer' },
+        largerThan20: function(val) {
+          if (val <= 20) {
+            return 'id must be large than 20';
+          }
+        }
+      },
+      description: 'user id'
     }
   ],
+  description: 'Get user info',
   http: { path: 'info', verb: 'get' },
   presenter: UserEntity,
   returns: function(ctx, cb) {
-    ctx.res.send(ctx.result);
+    ctx.res.send({
+      data: ctx.result
+    });
+    cb();
   }
 }, function(params, cb) {
   cb(null, {
@@ -80,32 +96,35 @@ UserApi.after('info', function(ctx, next) {
   next();
 });
 
+apiV1.use(UserApi);
 
-api.use(UserApi);
+var UserApiV2 = new ApiBuilder();
 
-app.use(api.handler('rest', {
-  errorHandler: function(err, req, res, next) {
-    if (err) {
-      err.validations = err.validations || {};
-      if (err.validations.errors) {
-        res.statusCode = 422;
-      } else {
-        res.statusCode = 500;
-      }
-      res.send({
-        status: res.statusCode,
-        message: err.validations.message || err.message || 'An unknown error occurred',
-        errors: err.validations.errors || err.stack
-      });
+UserApiV2.extend(UserApi);
+
+apiV2.use(UserApiV2);
+
+var errorHandler = function(err, req, res, next) {
+  if (err) {
+    err.validations = err.validations || {};
+    if (err.validations.errors) {
+      res.statusCode = 422;
     } else {
-      next();
+      res.statusCode = 500;
     }
+    res.send({
+      status: res.statusCode,
+      message: err.validations.message || err.message || 'An unknown error occurred',
+      errors: err.validations.errors || err.stack
+    });
+  } else {
+    next();
   }
-}));
+};
+
+app.use('/api/v1', apiV1.handler('rest', { errorHandler: errorHandler }));
+app.use('/api/v2', apiV2.handler('rest', { errorHandler: errorHandler }));
 
 app.use(express.static('public'));
 
 app.listen(3000);
-
-exports.api = api;
-exports.app = app;
