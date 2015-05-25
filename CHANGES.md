@@ -1,3 +1,8 @@
+1.1.4
+-----------
+
+- Add human readable routes debug info
+
 1.1.3
 -----------
 
