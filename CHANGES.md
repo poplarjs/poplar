@@ -1,3 +1,8 @@
+1.1.5
+-----------
+
+- Better debug information for routers
+
 1.1.4
 -----------
 
