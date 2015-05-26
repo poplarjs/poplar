@@ -1,3 +1,9 @@
+1.1.6
+-----------
+
+- Better debug information for routers
+- Add checking for http verb
+
 1.1.5
 -----------
 
