@@ -1,5 +1,11 @@
+1.2.1
+-----------
+
+- Better route debug info
+
 1.2.0
 -----------
+
 - Add human readable routes debug info
 - Fix Entity parse bug, options will lost when parsing array object
 - Add args to entity options
