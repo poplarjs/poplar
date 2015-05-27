@@ -1,33 +1,13 @@
-1.1.6
+1.2.0
 -----------
-
+- Add human readable routes debug info
+- Fix Entity parse bug, options will lost when parsing array object
+- Add args to entity options
+- Allow validation required to be a function
 - Better debug information for routers
 - Add checking for http verb
+- Add basePath support for Poplar instance
 
-1.1.5
------------
-
-- Better debug information for routers
-
-1.1.4
------------
-
-- Add human readable routes debug info
-
-1.1.3
------------
-
-- Fix Entity parse bug, options will lost when parsing array object
-
-1.1.2
------------
-
-- Add args to entity options
-
-1.1.1
------------
-
-- Allow validation required to be a function
 
 1.1.0
 -----------

@@ -122,8 +122,11 @@ var errorHandler = function(err, req, res, next) {
   }
 };
 
-app.use('/api/v1', apiV1.handler('rest', { errorHandler: errorHandler }));
-app.use('/api/v2', apiV2.handler('rest', { errorHandler: errorHandler }));
+apiV1.setBasePath('/api/v1');
+apiV2.setBasePath('/api/v2');
+
+app.use(apiV1.handler('rest', { errorHandler: errorHandler }));
+app.use(apiV2.handler('rest', { errorHandler: errorHandler }));
 
 app.use(express.static('public'));
 

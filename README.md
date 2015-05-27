@@ -9,7 +9,7 @@ Poplar (白杨树)
 
 > Under active development
 
-Poplar (https://github.com/poplarjs/poplar) is an easy to use and pinionated micro-framework built on top of [express](https://github.com/strongloop/express) for writing scalable and REST-like web APIs. Its main goals are parameter validation, entities, hooks, scalability and allowing rapid development and deployment of such APIs.
+Poplar (https://github.com/poplarjs/poplar) is an easy to use and opinionated micro-framework built on top of [express](https://github.com/strongloop/express) for writing scalable and REST-like web APIs. Its main goals are parameter validation, entities, hooks, scalability and allowing rapid development and deployment of such APIs.
 
 Because of this Poplar is an ideal candidate for building robust, scalable and secure web things.
 
@@ -19,3 +19,7 @@ Features
 * Built-in parameter validation
 * Entities - a simple Facade to use with your models and API
 * Hooks, enabling the power of scalability of your api method
+
+License
+-------
+* Poplar is licensed under the MIT license
