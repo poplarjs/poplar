@@ -1,3 +1,10 @@
+1.2.2
+-----------
+
+- Allow to define multi hooks(before, after, afterError) for one time
+- Add more tests
+- Add Context options#helpers as method invocation context
+
 1.2.1
 -----------
 
