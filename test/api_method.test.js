@@ -229,6 +229,12 @@ function givenMethodExpect(options) {
         }
       ]
     }, function(params, next) {
+
+      // test for context helpers
+      expect(this).to.have.property('isLogin', true);
+      expect(this).to.have.deep.property('currentUser.id', 1);
+      expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
+
       if (options.returnValue) {
         next(null, options.returnValue);
       } else {
@@ -245,7 +251,15 @@ function givenMethodExpect(options) {
     var app = express();
 
     app.get('/', function(req, res) {
-      var ctx = new HttpContext(req, res, method);
+      var ctx = new HttpContext(req, res, method, {
+        helpers: {
+          isLogin: true,
+          currentUser: {
+            id: 1,
+            name: 'Felix Liu'
+          }
+        }
+      });
       try {
         method.invoke(ctx, function(err, result) {
           if (err) {

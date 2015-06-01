@@ -89,6 +89,12 @@ describe('ApiBuilder', function() {
       apiBuilder.before('info', function(ctx, next) { return; });
       expect(apiBuilder._events).to.have.property('before.test.info')
     });
+
+    it('should add two before hook', function() {
+      apiBuilder.before('login', 'info', function(ctx, next) { return; });
+      expect(apiBuilder._events).to.have.property('before.test.login');
+      expect(apiBuilder._events).to.have.property('before.test.info');
+    });
   });
 
   describe('#after(methodMatch, fn)', function() {
@@ -96,12 +102,24 @@ describe('ApiBuilder', function() {
       apiBuilder.after('info', function(ctx, next) { return; });
       expect(apiBuilder._events).to.have.property('after.test.info')
     });
+
+    it('should add two after hook', function() {
+      apiBuilder.after('login', 'info', function(ctx, next) { return; });
+      expect(apiBuilder._events).to.have.property('after.test.login');
+      expect(apiBuilder._events).to.have.property('after.test.info');
+    });
   });
 
   describe('#afterError(methodMatch, fn)', function() {
     it('should add a afterError hook', function() {
       apiBuilder.afterError('info', function(ctx, next) { return; });
       expect(apiBuilder._events).to.have.property('afterError.test.info')
+    });
+
+    it('should add two afterError hook', function() {
+      apiBuilder.afterError('login', 'info', function(ctx, next) { return; });
+      expect(apiBuilder._events).to.have.property('afterError.test.login');
+      expect(apiBuilder._events).to.have.property('afterError.test.info');
     });
   });
 });

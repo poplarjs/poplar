@@ -88,21 +88,39 @@ describe('Poplar', function() {
   describe('#before(methodMatch, fn)', function() {
     it('should add a before hook', function() {
       poplar.before('users.login', function(ctx, next) { return; });
-      expect(poplar._events).to.have.property('before.users.login')
+      expect(poplar._events).to.have.property('before.users.login');
+    });
+
+    it('should add two before hook', function() {
+      poplar.before('users.login', 'users.info', function(ctx, next) { return; });
+      expect(poplar._events).to.have.property('before.users.login');
+      expect(poplar._events).to.have.property('before.users.info');
     });
   });
 
   describe('#after(methodMatch, fn)', function() {
     it('should add a after hook', function() {
       poplar.after('users.login', function(ctx, next) { return; });
-      expect(poplar._events).to.have.property('after.users.login')
+      expect(poplar._events).to.have.property('after.users.login');
+    });
+
+    it('should add two after hook', function() {
+      poplar.after('users.login', 'users.info', function(ctx, next) { return; });
+      expect(poplar._events).to.have.property('after.users.login');
+      expect(poplar._events).to.have.property('after.users.info');
     });
   });
 
   describe('#afterError(methodMatch, fn)', function() {
     it('should add a afterError hook', function() {
       poplar.afterError('users.login', function(ctx, next) { return; });
-      expect(poplar._events).to.have.property('afterError.users.login')
+      expect(poplar._events).to.have.property('afterError.users.login');
+    });
+
+    it('should add two afterError hook', function() {
+      poplar.afterError('users.login', 'users.info', function(ctx, next) { return; });
+      expect(poplar._events).to.have.property('afterError.users.login');
+      expect(poplar._events).to.have.property('afterError.users.info');
     });
   });
 
