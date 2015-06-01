@@ -23,3 +23,10 @@ Features
 License
 -------
 * Poplar is licensed under the MIT license
+
+TODOs
+-----
+
+* Add beforeValidation hook
+* Add socket.io support
+* Add koa support
