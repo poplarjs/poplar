@@ -1,3 +1,8 @@
+1.2.3
+-----------
+
+- Change default error handler bahavior
+
 1.2.2
 -----------
 
