@@ -67,6 +67,7 @@ describe('Validate()', function() {
     expect(errors.asJSON()).to.have.property('age');
     expect(errors.asJSON()).to.have.deep.property('age.largerThan20', 'age should larger than 20');
     expect(errors.asJSON()).to.have.deep.property('conditionParam.required', 'conditionParam is required');
+    expect(errors.asJSON()).to.not.have.property('number');
   });
 
   it('should return errors, if validations are failed', function() {
@@ -79,6 +80,7 @@ describe('Validate()', function() {
     expect(errors.asJSON()).to.have.deep.property('score.isFloat');
     expect(errors.asJSON()).to.have.property('number');
     expect(errors.asJSON()).to.have.deep.property('number.isInt');
+    expect(errors.asJSON()).to.not.have.deep.property('number.required');
   });
 
 });
