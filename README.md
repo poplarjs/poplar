@@ -27,6 +27,7 @@ License
 TODOs
 -----
 
+* Add upload files support
 * Add beforeValidation hook
 * Add socket.io support
 * Add koa support
