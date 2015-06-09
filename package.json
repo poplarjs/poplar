@@ -36,7 +36,6 @@
     "js2xmlparser": "^0.1.9",
     "lodash": "^3.9.3",
     "minimatch": "^2.0.8",
-    "traverse": "^0.6.6",
     "validator": "^3.40.0"
   },
   "devDependencies": {
