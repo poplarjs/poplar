@@ -1,3 +1,8 @@
+1.2.4
+-----------
+
+- Remove unused functions and fix argument convert bug
+
 1.2.3
 -----------
 
