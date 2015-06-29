@@ -124,7 +124,7 @@ function givenMethodExpectArg(options) {
     var app = require('express')();
 
     app.get('/', function(req, res) {
-      var ctx = new HttpContext(req, res, method);
+      var ctx = new HttpContext(req, res, method.createMethodInvocation());
       try {
         expect(ctx.args.testArg).to.eql(options.expectedValue);
       } catch (e) {

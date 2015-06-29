@@ -204,45 +204,138 @@ describe('ApiMethod', function() {
       }));
     });
   });
+
+  describe('MethodInvocation', function() {
+
+    var method, methodInvocation;
+
+    beforeEach(function() {
+      method = createMethod({
+        presenterSource: 'data[0]',
+        returnValue: {
+          data: [{
+            myEmail: 'ddd@mydomain.org'
+          }]
+        }
+      });
+      methodInvocation = method.createMethodInvocation();
+    });
+
+    describe('inherits', function() {
+      it('should inherite all methods from ApiMethod', function() {
+        var _expect = givenPrototypeMethodExpect(method, methodInvocation);
+        _expect('createMethodInvocation');
+        _expect('clone');
+        _expect('fullName');
+        _expect('fullPath');
+        _expect('setApiBuilder');
+        _expect('invoke');
+        _expect('__original');
+        _expect('fn');
+        _expect('name');
+        _expect('_apiBuilder');
+        _expect('accepts');
+        _expect('returns');
+        _expect('presenter');
+        _expect('presenterSource');
+      });
+    });
+
+    describe('#prototype', function() {
+      describe('#set(name, obj)', function() {
+        it('should set locals by given key, value', function() {
+          methodInvocation.set('name', 'Felix Liu');
+          methodInvocation.set('age', 12);
+
+          expect(methodInvocation.locals.name).to.equals('Felix Liu');
+          expect(methodInvocation.locals.age).to.equals(12);
+          expect(methodInvocation.locals.notDefined).to.equals(undefined);
+          expect(method).to.not.have.property('locals');
+          expect(method).to.not.respondTo('set');
+        });
+      });
+
+      describe('#get(name)', function() {
+        it('should return value by given key', function() {
+          methodInvocation.set('name', 'Felix Liu');
+          methodInvocation.set('age', 12);
+
+          expect(methodInvocation.get('name')).to.equals('Felix Liu');
+          expect(methodInvocation.get('age')).to.equals(12);
+          expect(methodInvocation.get('notDefined')).to.equals(undefined);
+          expect(method).to.not.respondTo('get');
+        });
+      });
+
+      describe('irrelevent between method and methodInvocation', function() {
+        it('should not share property', function() {
+          methodInvocation._myName = 'Felix Liu';
+          methodInvocation._age = 12;
+
+          expect(methodInvocation).to.have.property('_myName', 'Felix Liu');
+          expect(methodInvocation).to.have.property('_age', 12);
+          expect(method).to.not.have.property('_myName');
+          expect(method).to.not.have.property('_age');
+        });
+      });
+    });
+  });
 });
+
+function givenPrototypeMethodExpect(method, methodInvocation) {
+  return function(methodName) {
+    if (typeof method[methodName] === 'function') {
+      expect(method[methodName].toString()).to.equals(methodInvocation[methodName].toString());
+    } else {
+      expect(method.hasOwnProperty(methodName)).to.equals(true);
+      expect(methodInvocation.hasOwnProperty(methodName)).to.equals(true);
+      expect((method[methodName] || '').toString()).to.equals((methodInvocation[methodName] || '').toString());
+    }
+  };
+}
+
+function createMethod(options) {
+  var emailEntity = new Entity();
+  emailEntity.expose('myEmail', { default: null });
+
+  return new ApiMethod('testMethod', {
+    presenter: emailEntity,
+    presenterSource: options.presenterSource,
+    accepts: [
+      {
+        arg: 'email',
+        type: 'string',
+        validates: {
+          isEmail: { message: 'email is not valid' },
+          isLength: { args: [7, 30], message: 'length should longer than 7 and less than 30' },
+          domainRestriction: function(val) {
+            if (val && val.split('@')[1] === 'mydomain.org') return;
+            return 'email must be xxx@mydomain.org';
+          }
+        }
+      }
+    ]
+  }, function(params, next) {
+
+    // test for context helpers
+    expect(this).to.have.property('isLogin', true);
+    expect(this).to.have.deep.property('currentUser.id', 1);
+    expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
+
+    if (options.returnValue) {
+      next(null, options.returnValue);
+    } else {
+      next(null, {
+        myEmail: params.email
+      });
+    }
+  });
+}
 
 function givenMethodExpect(options) {
   return function(done) {
-    var emailEntity = new Entity();
-    emailEntity.expose('myEmail', { default: null });
 
-    var method = new ApiMethod('testMethod', {
-      presenter: emailEntity,
-      presenterSource: options.presenterSource,
-      accepts: [
-        {
-          arg: 'email',
-          type: 'string',
-          validates: {
-            isEmail: { message: 'email is not valid' },
-            isLength: { args: [7, 30], message: 'length should longer than 7 and less than 30' },
-            domainRestriction: function(val) {
-              if (val && val.split('@')[1] === 'mydomain.org') return;
-              return 'email must be xxx@mydomain.org';
-            }
-          }
-        }
-      ]
-    }, function(params, next) {
-
-      // test for context helpers
-      expect(this).to.have.property('isLogin', true);
-      expect(this).to.have.deep.property('currentUser.id', 1);
-      expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
-
-      if (options.returnValue) {
-        next(null, options.returnValue);
-      } else {
-        next(null, {
-          myEmail: params.email
-        });
-      }
-    });
+    var method = createMethod(options);
 
     var apiBuilder = new ApiBuilder();
 
@@ -250,8 +343,10 @@ function givenMethodExpect(options) {
 
     var app = express();
 
+    var methodInvocation = method.createMethodInvocation();
+
     app.get('/', function(req, res) {
-      var ctx = new HttpContext(req, res, method, {
+      var ctx = new HttpContext(req, res, methodInvocation, {
         helpers: {
           isLogin: true,
           currentUser: {
@@ -261,7 +356,7 @@ function givenMethodExpect(options) {
         }
       });
       try {
-        method.invoke(ctx, function(err, result) {
+        methodInvocation.invoke(ctx, function(err, result) {
           if (err) {
             expect(err).to.eql(options.expectedValue);
           } else {

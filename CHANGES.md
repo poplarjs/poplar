@@ -1,3 +1,10 @@
+1.2.5
+-----------
+
+- Add MethodInvocation to avoid direct change to ApiMethod
+- Add test cases for MethodInvocation
+- Update dependencies
+
 1.2.4
 -----------
 
