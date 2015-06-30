@@ -238,6 +238,7 @@ describe('ApiMethod', function() {
         _expect('returns');
         _expect('presenter');
         _expect('presenterSource');
+        _expect('description');
       });
     });
 

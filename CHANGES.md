@@ -1,3 +1,8 @@
+1.2.6
+-----------
+
+- Add missing `description` to MethodInvocation
+
 1.2.5
 -----------
 
