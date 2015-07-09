@@ -1,35 +1,17 @@
-1.2.6
+1.3.0
 -----------
-
+- Add Sanitizer support: xss, trim e.g.
+- Fix helpers.isEmpty return NaN as false
+- Add Validate#extend method for adding custom validator
 - Add missing `description` to MethodInvocation
-
-1.2.5
------------
-
 - Add MethodInvocation to avoid direct change to ApiMethod
 - Add test cases for MethodInvocation
 - Update dependencies
-
-1.2.4
------------
-
 - Remove unused functions and fix argument convert bug
-
-1.2.3
------------
-
 - Change default error handler bahavior
-
-1.2.2
------------
-
 - Allow to define multi hooks(before, after, afterError) for one time
 - Add more tests
 - Add Context options#helpers as method invocation context
-
-1.2.1
------------
-
 - Better route debug info
 
 1.2.0
