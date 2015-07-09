@@ -140,7 +140,7 @@ describe('ApiMethod', function() {
       }));
 
       it('should pass isLenght, if length longer than 7 and less than 30', givenMethodExpect({
-        input: 'ddddddd',
+        input: 'dddddddd',
         expectedValue: {
           validations: {
             errors: {
@@ -177,7 +177,7 @@ describe('ApiMethod', function() {
       }));
 
       it('should return expected value, if use presenterSource', givenMethodExpect({
-        input: 'ddd@mydomain.org',
+        input: ' ddd@mydomain.ORG ',
         presenterSource: 'data[0]',
         returnValue: {
           data: [{
@@ -192,7 +192,7 @@ describe('ApiMethod', function() {
       }));
 
       it('should return expected value, if not use presenterSource', givenMethodExpect({
-        input: 'ddd@mydomain.org',
+        input: 'ddd@MYDOMAIN.org',
         returnValue: {
           data: [{
             myEmail: 'ddd@mydomain.org'
@@ -239,6 +239,8 @@ describe('ApiMethod', function() {
         _expect('presenter');
         _expect('presenterSource');
         _expect('description');
+        _expect('validate');
+        _expect('sanitize');
       });
     });
 
@@ -306,6 +308,12 @@ function createMethod(options) {
       {
         arg: 'email',
         type: 'string',
+        sanitizes: {
+          trim: true,
+          toLowerCase: function(val, params) {
+            return String(val).toLowerCase();
+          }
+        },
         validates: {
           isEmail: { message: 'email is not valid' },
           isLength: { args: [7, 30], message: 'length should longer than 7 and less than 30' },
