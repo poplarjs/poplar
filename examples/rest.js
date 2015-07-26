@@ -1,4 +1,4 @@
-/**
+/*!
  * To run this app do this:
  *
  * $ npm install express mongoose

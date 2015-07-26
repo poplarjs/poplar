@@ -11,10 +11,11 @@ var expect = chai.expect;
 
 describe('Poplar', function() {
 
-  var poplar, apiBuilder;
+  var poplar, apiBuilder, poplar1;
 
   beforeEach(function() {
     poplar = Poplar.create();
+    poplar1 = Poplar.create();
     apiBuilder = new ApiBuilder('test', { basePath: '/test' });
   });
 
@@ -37,6 +38,27 @@ describe('Poplar', function() {
       poplar.use(apiBuilder);
       poplar.use('test1', {});
       expect(poplar._apiBuilders).to.have.all.keys(['test', 'test1']);
+    });
+  });
+
+  describe('#get(), #set(), #unset()', function() {
+    it('should get configuration by its name', function() {
+      Poplar.set('gender', 'male');
+      poplar.set('name', 'Felix Liu');
+      poplar.set('age', 18);
+      expect(poplar.get('name')).to.equal('Felix Liu');
+      expect(poplar.get('gender')).to.equal('male');
+      expect(poplar.get('age')).to.equal(18);
+      expect(poplar1.get('gender')).to.equal('male');
+      expect(poplar1.get('name')).to.equal('Felix Liu');
+      expect(poplar1.get('age')).to.equal(18);
+
+      poplar.unset('name');
+
+      expect(poplar.get('name')).to.equal(undefined);
+      expect(poplar1.get('name')).to.equal(undefined);
+
+      expect(poplar1.get('age')).to.equal(18);
     });
   });
 
