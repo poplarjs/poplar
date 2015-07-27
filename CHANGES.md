@@ -1,3 +1,9 @@
+1.3.1
+-----------
+- Add `#set`, `#get`, `#unset` for poplar constructor and instance
+- Add more embed documentation
+- Add `build.sh` script for generating documentation
+
 1.3.0
 -----------
 - Add Sanitizer support: xss, trim e.g.
