@@ -58,13 +58,23 @@ describe('ApiBuilder', function() {
 
   describe('#extend()', function() {
     it('should have the same methods, name and options for extended apiBuilder', function() {
+      // define method
       apiBuilder.define('info', {}, function() {});
+
+      // define hooks
+      apiBuilder.before('info', function() {});
+      apiBuilder.after('info', function() {});
+      apiBuilder.afterError('info', function() {});
+
       var apiBuilder1 = new ApiBuilder();
       apiBuilder1.extend(apiBuilder);
       expect(apiBuilder.methods()).to.have.all.keys(['info']);
       expect(apiBuilder1.methods()).to.have.all.keys(['info']);
       expect(apiBuilder1.name).to.equal(apiBuilder.name);
       expect(apiBuilder1.options).to.eql(apiBuilder.options);
+      expect(apiBuilder1._events).to.have.property('before.test.info');
+      expect(apiBuilder1._events).to.have.property('after.test.info');
+      expect(apiBuilder1._events).to.have.property('afterError.test.info');
     });
   });
 
