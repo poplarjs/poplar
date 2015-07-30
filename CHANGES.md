@@ -1,3 +1,6 @@
+1.3.3
+- Update basePath regexp to allow `.`, `-`
+
 1.3.2
 -----------
 - Enhance `ApiBuilder.prototype.extend` function with `events` inherits
