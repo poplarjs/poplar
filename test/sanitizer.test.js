@@ -59,4 +59,25 @@ describe('Sanitize()', function() {
     expect(args).to.have.property('introduction', '<a href="#">click me</a>');
   });
 
+  it('should contains all the sanitizers', function() {
+    [
+      'blacklist',
+      'escape',
+      'ltrim',
+      'normalizeEmail',
+      'rtrim',
+      'stripLow',
+      'toBoolean',
+      'toDate',
+      'toFloat',
+      'toInt',
+      'toString',
+      'trim',
+      'whitelist',
+      'xss'
+    ].forEach(function(name) {
+      expect(Sanitize.method(name)).to.be.a('function');
+    });
+  });
+
 });

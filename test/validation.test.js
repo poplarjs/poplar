@@ -7,8 +7,9 @@ var Validate = require('../lib/validation');
 describe('Validate()', function() {
   var validations = [
     { arg: 'name',
+      required: { message: 'name is required' },
       validates: {
-        required: { message: 'name is required' },
+        required: { message: 'this message will be overwrited' },
         isLength: { args: [5, 15], message: 'name must longer than 5 and less than 15' }
       }
     },
@@ -36,8 +37,8 @@ describe('Validate()', function() {
     },
     {
       arg: 'number',
+      required: true,
       validates: {
-        required: true,
         isInt: true
       }
     },
@@ -81,6 +82,53 @@ describe('Validate()', function() {
     expect(errors.asJSON()).to.have.property('number');
     expect(errors.asJSON()).to.have.deep.property('number.isInt');
     expect(errors.asJSON()).to.not.have.deep.property('number.required');
+  });
+
+  it('should contains all the validators', function() {
+    [
+      'contains',
+      'equals',
+      'isAfter',
+      'isAlpha',
+      'isAlphanumeric',
+      'isAscii',
+      'isBase64',
+      'isBefore',
+      'isBoolean',
+      'isByteLength',
+      'isCreditCard',
+      'isCurrency',
+      'isDate',
+      'isDivisibleBy',
+      'isEmail',
+      'isFQDN',
+      'isFloat',
+      'isFullWidth',
+      'isHalfWidth',
+      'isHexColor',
+      'isHexadecimal',
+      'isIP',
+      'isISBN',
+      'isISIN',
+      'isIn',
+      'isInt',
+      'isJSON',
+      'isLength',
+      'isLowercase',
+      'isMobilePhone',
+      'isMongoId',
+      'isMultibyte',
+      'isNull',
+      'isNumeric',
+      'isSurrogatePair',
+      'isURL',
+      'isUUID',
+      'isUppercase',
+      'isVariableWidth',
+      'matches'
+    ].forEach(function(name) {
+      expect(Validate.method(name)).to.be.a('function');
+    });
   });
 
 });
