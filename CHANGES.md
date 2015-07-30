@@ -1,3 +1,9 @@
+1.3.2
+-----------
+- Enhance `ApiBuilder.prototype.extend` function with `events` inherits
+- Move `required` from `validates` to outer
+- Add tests for `Validate` and `Sanitize` for method existance check
+
 1.3.1
 -----------
 - Add `#set`, `#get`, `#unset` for poplar constructor and instance
