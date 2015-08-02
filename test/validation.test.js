@@ -37,7 +37,7 @@ describe('Validate()', function() {
     },
     {
       arg: 'number',
-      required: true,
+      required: { message: 'number is required' },
       validates: {
         isInt: true
       }
@@ -59,8 +59,8 @@ describe('Validate()', function() {
     expect(errors.asJSON()).to.have.property('name');
     expect(errors.any()).to.equal(true);
     expect(errors.asJSON()).to.have.deep.property('name.required', 'name is required');
-    expect(errors.flatten()).to.eql(["name is required", "number: 'required' validation failed"]);
-    expect(errors.toHuman()).to.eql("name is required; number: 'required' validation failed");
+    expect(errors.flatten()).to.eql(["name is required", "number is required"]);
+    expect(errors.toHuman()).to.eql("name is required; number is required");
   });
 
   it('should return error, if age is present and less than 20', function() {
