@@ -1,3 +1,6 @@
+1.3.4
+- Refactor `Validate` module, and allow using `{ required: 'name is required' }` syntax
+
 1.3.3
 - Update basePath regexp to allow `.`, `-`
 
