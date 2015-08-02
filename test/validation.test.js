@@ -7,7 +7,7 @@ var Validate = require('../lib/validation');
 describe('Validate()', function() {
   var validations = [
     { arg: 'name',
-      required: { message: 'name is required' },
+      required: 'name is required',
       validates: {
         required: { message: 'this message will be overwrited' },
         isLength: { args: [5, 15], message: 'name must longer than 5 and less than 15' }
