@@ -244,7 +244,15 @@ describe('ApiMethod', function() {
       });
     });
 
+
     describe('#prototype', function() {
+      describe('init()', function() {
+        it('should contains init statues for validation and sanitization', function() {
+          expect(methodInvocation).to.have.property('isValidated', false);
+          expect(methodInvocation).to.have.property('isSanitized', false);
+        });
+      });
+
       describe('#set(name, obj)', function() {
         it('should set locals by given key, value', function() {
           methodInvocation.set('name', 'Felix Liu');
@@ -326,7 +334,9 @@ function createMethod(options) {
     ]
   }, function(params, next) {
 
-    // test for context helpers
+    // test for method helpers
+    expect(this).to.have.property('isValidated', true);
+    expect(this).to.have.property('isSanitized', true);
     expect(this).to.have.property('isLogin', true);
     expect(this).to.have.deep.property('currentUser.id', 1);
     expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
@@ -354,16 +364,11 @@ function givenMethodExpect(options) {
 
     var methodInvocation = method.createMethodInvocation();
 
+    methodInvocation.isLogin = true;
+    methodInvocation.currentUser = { id: 1, name: 'Felix Liu' };
+
     app.get('/', function(req, res) {
-      var ctx = new HttpContext(req, res, methodInvocation, {
-        helpers: {
-          isLogin: true,
-          currentUser: {
-            id: 1,
-            name: 'Felix Liu'
-          }
-        }
-      });
+      var ctx = new HttpContext(req, res, methodInvocation);
       try {
         methodInvocation.invoke(ctx, function(err, result) {
           if (err) {

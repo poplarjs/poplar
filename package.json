@@ -29,16 +29,16 @@
   "homepage": "https://github.com/poplarjs/poplar",
   "dependencies": {
     "async": "^0.9.2",
-    "bluebird": "^2.9.30",
-    "body-parser": "^1.13.1",
+    "bluebird": "^2.9.34",
+    "body-parser": "^1.13.3",
     "cors": "^2.7.1",
     "debug": "^2.2.0",
-    "express": "^4.13.0",
+    "express": "^4.13.3",
     "js2xmlparser": "^0.1.9",
-    "lodash": "^3.9.3",
-    "minimatch": "^2.0.8",
-    "validator": "^3.43.0",
-    "xss": "^0.2.2"
+    "lodash": "^3.10.1",
+    "minimatch": "^2.0.10",
+    "validator": "^4.0.2",
+    "xss": "^0.2.5"
   },
   "devDependencies": {
     "chai": "^2.3.0",
