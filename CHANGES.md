@@ -1,3 +1,8 @@
+1.3.5
+- Add `isValidated` and `isSanitized` statuses
+- Remove HttpContext `helpers` support
+- Update package and dependencies version
+
 1.3.4
 - Refactor `Validate` module, and allow using `{ required: 'name is required' }` syntax
 
