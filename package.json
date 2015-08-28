@@ -37,8 +37,8 @@
     "js2xmlparser": "^0.1.9",
     "lodash": "^3.10.1",
     "minimatch": "^2.0.10",
-    "validator": "^4.0.2",
-    "xss": "^0.2.5"
+    "validator": "^4.0.5",
+    "xss": "^0.2.7"
   },
   "devDependencies": {
     "chai": "^2.3.0",
