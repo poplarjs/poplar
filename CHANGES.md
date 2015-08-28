@@ -1,3 +1,8 @@
+1.3.6
+- Update travis.yml
+- Use `_.each` and `_.map` instead of original `Array.prototype.forEach` and `Array.prototype.map` for performance issue
+- Update package and dependencies version
+
 1.3.5
 - Add `isValidated` and `isSanitized` statuses
 - Remove HttpContext `helpers` support
