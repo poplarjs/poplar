@@ -1,3 +1,6 @@
+1.3.7
+- Avoid Entity parse empty value such as `undefined` and `null` after default value applied
+
 1.3.6
 - Update travis.yml
 - Use `_.each` and `_.map` instead of original `Array.prototype.forEach` and `Array.prototype.map` for performance issue
