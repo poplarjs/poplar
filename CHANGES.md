@@ -1,3 +1,6 @@
+1.3.8
+- Change ApiMethod `returns` behaviour, use default context `done` method to handle request
+
 1.3.7
 - Avoid Entity parse empty value such as `undefined` and `null` after default value applied
 

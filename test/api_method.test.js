@@ -202,6 +202,26 @@ describe('ApiMethod', function() {
           myEmail: null
         }
       }));
+
+      it('should return expected value by `returns` function', givenMethodExpect({
+        input: 'ddd@mydomain.org',
+        presenterSource: 'data[0]',
+        returnValue: {
+          data: [{
+            myEmail: 'ddd@mydomain.org'
+          }]
+        },
+        expectedValue: {
+          message: 'success',
+          specialData: [{
+            myEmail: 'ddd@mydomain.org'
+          }]
+        },
+        returns: function(ctx, next) {
+          var result = ctx.result;
+          next(null, { specialData: result.data, message: 'success' });
+        }
+      }));
     });
   });
 
@@ -331,7 +351,8 @@ function createMethod(options) {
           }
         }
       }
-    ]
+    ],
+    returns: typeof options.returns === 'function' ? options.returns : null
   }, function(params, next) {
 
     // test for method helpers
