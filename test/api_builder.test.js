@@ -78,6 +78,39 @@ describe('ApiBuilder', function() {
     });
   });
 
+  describe('#undefine()', function() {
+    it('should undefine the pre-defined method', function() {
+      // define method
+      apiBuilder.define('info', {}, function() {});
+      expect(apiBuilder.method('info')).to.have.property('name', 'info');
+
+      // undefine method
+      apiBuilder.undefine('info');
+      expect(apiBuilder.method('info')).to.be.undefined;
+    });
+  });
+
+  describe('#exists()', function() {
+    it('should return true if a method is exists', function() {
+      // define method
+      apiBuilder.define('info', {}, function() {});
+      expect(apiBuilder.exists('info')).to.be.true;
+    });
+  });
+
+  describe('#prepend()', function() {
+    it('should a method before a specific method', function() {
+      // define method
+      apiBuilder.define('methodToBePrepended', {}, function() {});
+      apiBuilder.define('middleMethod', {}, function() {});
+      apiBuilder.define('methodToBePrepending', {}, function() {});
+
+      expect(Object.keys(apiBuilder.methods())).to.be.eql(['methodToBePrepended', 'middleMethod', 'methodToBePrepending']);
+      apiBuilder.prepend('methodToBePrepending', 'methodToBePrepended');
+      expect(Object.keys(apiBuilder.methods())).to.be.eql(['methodToBePrepending', 'methodToBePrepended', 'middleMethod']);
+    });
+  });
+
   describe('#method()', function() {
     it('should return method fn by name', function() {
       var apiMethod = new ApiMethod('info', {}, function(){});
