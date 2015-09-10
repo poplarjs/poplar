@@ -28,21 +28,21 @@ describe('ApiBuilder', function() {
       });
 
       it('can be empty', function() {
-        expect(function() { new ApiBuilder(false) }).to.not.throw(Error);
-        expect(function() { new ApiBuilder('') }).to.not.throw(Error);
-        expect(function() { new ApiBuilder() }).to.not.throw(Error);
-        expect(function() { new ApiBuilder(0) }).to.not.throw(Error);
-        expect(function() { new ApiBuilder(undefined) }).to.not.throw(Error);
-        expect(function() { new ApiBuilder(null) }).to.not.throw(Error);
+        expect(function() { new ApiBuilder(false); }).to.not.throw(Error);
+        expect(function() { new ApiBuilder(''); }).to.not.throw(Error);
+        expect(function() { new ApiBuilder(); }).to.not.throw(Error);
+        expect(function() { new ApiBuilder(0); }).to.not.throw(Error);
+        expect(function() { new ApiBuilder(undefined); }).to.not.throw(Error);
+        expect(function() { new ApiBuilder(null); }).to.not.throw(Error);
       });
     });
 
     describe(':options', function() {
       it('should be a plain object', function() {
-        expect(function() { new ApiBuilder('name', '123') }).to.throw(Error);
-        expect(function() { new ApiBuilder('name', 123) }).to.throw(Error);
-        expect(function() { new ApiBuilder('name', []) }).to.throw(Error);
-        expect(function() { new ApiBuilder('name', {}) }).to.not.throw(Error);
+        expect(function() { new ApiBuilder('name', '123'); }).to.throw(Error);
+        expect(function() { new ApiBuilder('name', 123); }).to.throw(Error);
+        expect(function() { new ApiBuilder('name', []); }).to.throw(Error);
+        expect(function() { new ApiBuilder('name', {}); }).to.not.throw(Error);
       });
     });
   });
@@ -130,7 +130,7 @@ describe('ApiBuilder', function() {
   describe('#before(methodMatch, fn)', function() {
     it('should add a before hook', function() {
       apiBuilder.before('info', function(ctx, next) { return; });
-      expect(apiBuilder._events).to.have.property('before.test.info')
+      expect(apiBuilder._events).to.have.property('before.test.info');
     });
 
     it('should add two before hook', function() {
@@ -143,7 +143,7 @@ describe('ApiBuilder', function() {
   describe('#after(methodMatch, fn)', function() {
     it('should add a after hook', function() {
       apiBuilder.after('info', function(ctx, next) { return; });
-      expect(apiBuilder._events).to.have.property('after.test.info')
+      expect(apiBuilder._events).to.have.property('after.test.info');
     });
 
     it('should add two after hook', function() {
@@ -156,7 +156,7 @@ describe('ApiBuilder', function() {
   describe('#afterError(methodMatch, fn)', function() {
     it('should add a afterError hook', function() {
       apiBuilder.afterError('info', function(ctx, next) { return; });
-      expect(apiBuilder._events).to.have.property('afterError.test.info')
+      expect(apiBuilder._events).to.have.property('afterError.test.info');
     });
 
     it('should add two afterError hook', function() {

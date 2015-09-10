@@ -34,26 +34,26 @@ describe('ApiMethod', function() {
       });
 
       it("http arg must be a plain object", function(){
-        expect(function(){ new ApiMethod('name', { http: 'abc' }, fn) }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', { http: 'abc' }, fn); }).to.throw(Error);
       });
 
       it("presenter arg must be an Entity ", function(){
-        expect(function(){ new ApiMethod('name', { presenter: {} }, fn) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', { presenter: [] }, fn) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', { presenter: 'a' }, fn) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', { presenter: new Entity() }, fn) }).to.not.throw(Error);
+        expect(function(){ new ApiMethod('name', { presenter: {} }, fn); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', { presenter: [] }, fn); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', { presenter: 'a' }, fn); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', { presenter: new Entity() }, fn); }).to.not.throw(Error);
       });
     });
 
     describe(':fn', function() {
       it('should be a function', function() {
-        expect(function(){ new ApiMethod('name', {}, '') }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', {}, false) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', {}, undefined) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', {}, null) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', {}, []) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', {}, {}) }).to.throw(Error);
-        expect(function(){ new ApiMethod('name', {}, function(){}) }).to.not.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, ''); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, false); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, undefined); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, null); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, []); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, {}); }).to.throw(Error);
+        expect(function(){ new ApiMethod('name', {}, function(){}); }).to.not.throw(Error);
       });
     });
   });

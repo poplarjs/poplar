@@ -68,31 +68,31 @@ describe('Entity', function() {
   describe('#add()', function() {
 
     it('should add multi-attribute', function() {
-      var fn = function(){ SomeEntity.add('name', 'age', 'gender') };
+      var fn = function(){ SomeEntity.add('name', 'age', 'gender'); };
       expect(fn).to.not.throw(Error);
     });
 
     it('should add multi-attribute with :value option', function() {
-      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { value: 15 }) };
+      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { value: 15 }); };
       expect(fn).to.not.throw(Error);
     });
 
     it('should add multi-attribute with :if option', function() {
-      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { if: function(obj){ return obj.age > 15 } }) };
-      var fnError = function(){ SomeEntity.add('name', 'age', 'gender', { if: 'ifcondition' }) };
+      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { if: function(obj){ return obj.age > 15; } }); };
+      var fnError = function(){ SomeEntity.add('name', 'age', 'gender', { if: 'ifcondition' }); };
       expect(fn).to.not.throw(Error);
       expect(fnError).to.throw(Error);
     });
 
     it('should add multi-attribute with :using option', function() {
-      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { using: SomeOtherEntity }) };
-      var fnError = function(){ SomeEntity.add('name', 'age', 'gender', { using: function(obj){ return obj.age > 15 } }) };
+      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { using: SomeOtherEntity }); };
+      var fnError = function(){ SomeEntity.add('name', 'age', 'gender', { using: function(obj){ return obj.age > 15; } }); };
       expect(fn).to.not.throw(Error);
       expect(fnError).to.throw(Error);
     });
 
     it('should add multi-attribute with :default option', function() {
-      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { default: SomeOtherEntity }) };
+      var fn = function(){ SomeEntity.add('name', 'age', 'gender', { default: SomeOtherEntity }); };
       expect(fn).to.not.throw(Error);
     });
 
@@ -178,7 +178,7 @@ describe('Entity', function() {
     it('should have the same functionalities of #add()', function() {
       expect(SomeEntity.expose.toString()).to.equal(SomeEntity.add.toString());
     });
-  })
+  });
 
   describe('#parse(input, options, converter)', function() {
     var UserEntity, SocialEntity;
@@ -204,7 +204,7 @@ describe('Entity', function() {
       SocialEntity.add('qq', 'skype', 'facebook', 'twitter');
 
       UserEntity.add('social', { using: SocialEntity });
-    })
+    });
 
     it('should only return exposed fields', function() {
       var user = {
@@ -284,7 +284,7 @@ describe('Entity', function() {
 
       expect(UserEntity.parse({}, converter)).to.have.property('birthday', '2015-10-10');
       expect(UserEntity.parse({}, {}, converter)).to.have.property('birthday', '2015-10-10');
-    })
+    });
   });
 
 });

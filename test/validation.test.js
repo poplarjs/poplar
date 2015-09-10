@@ -130,5 +130,4 @@ describe('Validate()', function() {
       expect(Validate.method(name)).to.be.a('function');
     });
   });
-
 });

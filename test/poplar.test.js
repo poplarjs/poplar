@@ -288,4 +288,4 @@ function generateExecuteHooks(result, poplar, apiBuilder, done) {
   poplar.use(apiBuilder);
 
   done();
-};
+}

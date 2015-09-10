@@ -81,4 +81,4 @@ describe('Helper', function() {
       expect(Helper.isPresent(false)).to.equal(false);
     });
   });
-})
+});
