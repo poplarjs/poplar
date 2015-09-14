@@ -1,3 +1,6 @@
+1.3.9
+- Add several methods for ApiBuilder.prototype: `prepend`, `exists`, `undefine` and update corresponding tests
+
 1.3.8
 - Change ApiMethod `returns` behaviour, use default context `done` method to handle request
 
