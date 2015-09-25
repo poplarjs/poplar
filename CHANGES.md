@@ -1,3 +1,9 @@
+1.3.10
+- Add StateManager, before, after, afterError and method call will be reflected on state's change event
+- Add corresponding tests for StateManager
+- Delegate apiMethod error to afterError hook
+- Update dependencies
+
 1.3.9
 - Add several methods for ApiBuilder.prototype: `prepend`, `exists`, `undefine` and update corresponding tests
 
