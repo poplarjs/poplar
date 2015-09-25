@@ -6,6 +6,7 @@ var Poplar = require('../lib/poplar');
 var ApiBuilder = require('../lib/api_builder');
 var ApiMethod = require('../lib/api_method');
 var Dynamic = require('../lib/dynamic');
+var StateManager = require('../lib/state_manager');
 
 var expect = chai.expect;
 
@@ -148,25 +149,26 @@ describe('Poplar', function() {
 
   describe('#execHooks(when, method, ctx, next)', function() {
     var expectedResult = ['before_method_1', 'before_method_2', 'method', 'after_method_1', 'after_method_2', 'afterError'];
-    var result, method;
+    var result, method, state;
 
     beforeEach(function(done) {
       result = [];
       generateExecuteHooks(result, poplar, apiBuilder, function() {
         method = apiBuilder.method('method');
+        state = StateManager.init();
         done();
       });
     });
 
     it('should execute before hooks in orders', function(done) {
-      poplar.execHooks('before', method, {}, function() {
+      poplar.execHooks('before', method, { state: state }, function() {
         expect(result).to.eql(['before_method_1', 'before_method_2']);
         done();
       });
     });
 
     it('should execute after hooks in orders', function(done) {
-      poplar.execHooks('after', method, {}, function() {
+      poplar.execHooks('after', method, { state: state }, function() {
         expect(result).to.have.members(['after_method_1', 'after_method_2']);
         expect(result).to.not.have.members(['before_method_1', 'before_method_2']);
         done();
@@ -174,7 +176,7 @@ describe('Poplar', function() {
     });
 
     it('should execute afterError hook', function(done) {
-      poplar.execHooks('afterError', method, {}, function() {
+      poplar.execHooks('afterError', method, { state: state }, function() {
         expect(result).to.eql(['afterError']);
         done();
       });
@@ -182,21 +184,33 @@ describe('Poplar', function() {
   });
 
   describe('#invokeMethodInContext(method, ctx, next)', function() {
-    var expectedResult = ['before_method_1', 'before_method_2', 'method', 'after_method_1', 'after_method_2', 'afterError'];
-    var result, method;
+    var state;
 
-    beforeEach(function(done) {
-      result = [];
-      generateExecuteHooks(result, poplar, apiBuilder, function() {
-        method = apiBuilder.method('method');
-        done();
-      });
+    beforeEach(function() {
+      state = StateManager.init();
     });
 
     it('should execute hooks for method in contexts as specified orders', function(done) {
-      poplar.invokeMethodInContext(method, {}, function() {
-        expect(result).to.eql(expectedResult);
-        done();
+      var expectedResult = ['before_method_1', 'before_method_2', 'method', 'after_method_1', 'after_method_2', 'afterError'];
+      var result = [];
+      generateExecuteHooks(result, poplar, apiBuilder, function() {
+        var method = apiBuilder.method('method');
+        poplar.invokeMethodInContext(method, { state: state }, function() {
+          expect(result).to.eql(expectedResult);
+          done();
+        });
+      });
+    });
+
+    it('should execute afterError hooks when method raise an error', function(done) {
+      var expectedResult = ['errorMethod', 'afterError.test.errorMethod'];
+      var result = [];
+      generateExecuteHooks(result, poplar, apiBuilder, function() {
+        var errorMethod = apiBuilder.method('errorMethod');
+        poplar.invokeMethodInContext(errorMethod, { state: state }, function() {
+          expect(result).to.eql(expectedResult);
+          done();
+        });
       });
     });
   });
@@ -257,6 +271,16 @@ function generateExecuteHooks(result, poplar, apiBuilder, done) {
 
   apiBuilder.define('method', {}, function(params, next) {
     result.push('method');
+    next();
+  });
+
+  apiBuilder.define('errorMethod', {}, function(params, next) {
+    result.push('errorMethod');
+    next(new Error('errorMethod'));
+  });
+
+  poplar.afterError('test.errorMethod', function(ctx, next) {
+    result.push('afterError.test.errorMethod');
     next();
   });
 

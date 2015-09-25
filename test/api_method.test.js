@@ -259,6 +259,7 @@ describe('ApiMethod', function() {
         _expect('presenter');
         _expect('presenterSource');
         _expect('description');
+        _expect('http');
         _expect('validate');
         _expect('sanitize');
       });
