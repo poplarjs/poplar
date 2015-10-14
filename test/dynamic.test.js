@@ -40,6 +40,26 @@ describe('Dynamic', function() {
       expect(new Dynamic('-123.1.1').to('number')).to.be.a('number');
     });
 
+    it('should be converted as date', function() {
+      var date = new Date('2015-01-01 00:00:00');
+      expect(new Dynamic('2015-01-01 00:00:00').to('date')).to.eql(date);
+      expect(new Dynamic(date).to('date')).to.equal(date);
+      expect(new Dynamic('abcdefg').to('date')).to.be.a('date');
+      expect(new Dynamic('abcdefg').to('date').toString()).to.equal('Invalid Date');
+    });
+
+    it('should be converted as string', function() {
+      expect(new Dynamic(123).to('string')).to.eql('123');
+      expect(new Dynamic(-123).to('string')).to.equal('-123');
+    });
+
+    it('should be converted as any', function() {
+      expect(new Dynamic('123').to('any')).to.equal('123');
+      expect(new Dynamic(123).to('any')).to.equal(123);
+      expect(new Dynamic([123]).to('any')).to.eql([123]);
+      expect(new Dynamic({ a: 1 }).to('any')).to.eql({ a: 1 });
+    });
+
     it('should be converted as boolean', function() {
       expect(new Dynamic(true).to('boolean')).to.equal(true);
       expect(new Dynamic('true').to('boolean')).to.equal(true);

@@ -185,7 +185,7 @@ describe('Entity', function() {
 
     beforeEach(function() {
       UserEntity = new Entity();
-      UserEntity.add('name', 'city');
+      UserEntity.add('name', 'city', { type: 'string' });
       UserEntity.add('age', { default: 0 });
       UserEntity.add('gender', { default: 'unknown' });
       UserEntity.add('isAdult', function(obj, options) {
@@ -200,10 +200,13 @@ describe('Entity', function() {
       });
       UserEntity.add('birthday', { default: new Date('2015-10-10 10:00:00') });
 
+      UserEntity.add('hasGirlfriend', { type: 'boolean' });
+
       SocialEntity = new Entity();
       SocialEntity.add('qq', 'skype', 'facebook', 'twitter');
 
       UserEntity.add('social', { using: SocialEntity });
+      UserEntity.add('habits', { type: ['string'] });
     });
 
     it('should only return exposed fields', function() {
@@ -284,6 +287,19 @@ describe('Entity', function() {
 
       expect(UserEntity.parse({}, converter)).to.have.property('birthday', '2015-10-10');
       expect(UserEntity.parse({}, {}, converter)).to.have.property('birthday', '2015-10-10');
+    });
+
+    it('should convert field value by it\'s type', function() {
+      var user = {
+        name: 123,
+        habits: [123, true, 'pingpong'],
+        hasGirlfriend: 'true'
+      };
+
+      var result = UserEntity.parse(user);
+      expect(result).to.have.property('name', '123');
+      expect(result).to.have.property('habits').eql(['123', 'true', 'pingpong']);
+      expect(result).to.have.property('hasGirlfriend', true);
     });
   });
 
