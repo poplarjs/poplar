@@ -21,7 +21,7 @@ app.disable('x-powered-by');
 var Entity = poplar.Entity;
 var ApiBuilder = poplar.ApiBuilder;
 
-// 用户接口数据返回
+// User Entity
 var UserEntity = new Entity({
   username: true,
   age: true,
