@@ -1,3 +1,9 @@
+1.3.11
+- Add type cast for Entity
+- Add more Dynamic converters
+- Allow user to directly access `ctx` in apiMethod when in non restrict mode
+- Add delegates to `ctx` from `req` and `res`
+
 1.3.10
 - Add StateManager, before, after, afterError and method call will be reflected on state's change event
 - Add corresponding tests for StateManager
