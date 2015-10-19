@@ -176,6 +176,14 @@ describe('ApiMethod', function() {
         }
       }));
 
+      it('should return expected value, if not using restrict mode', givenMethodExpect({
+        input: 'ddd@mydomain.org',
+        isRestrictMode: false,
+        expectedValue: {
+          myEmail: 'ddd@mydomain.org'
+        }
+      }));
+
       it('should return expected value, if use presenterSource', givenMethodExpect({
         input: ' ddd@mydomain.ORG ',
         presenterSource: 'data[0]',
@@ -329,6 +337,43 @@ function givenPrototypeMethodExpect(method, methodInvocation) {
 function createMethod(options) {
   var emailEntity = new Entity();
   emailEntity.expose('myEmail', { default: null });
+  var fn;
+  if (options.isRestrictMode !== false) {
+    fn = function(params, next) {
+
+      // test for method helpers
+      expect(this).to.have.property('isValidated', true);
+      expect(this).to.have.property('isSanitized', true);
+      expect(this).to.have.property('isLogin', true);
+      expect(this).to.have.deep.property('currentUser.id', 1);
+      expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
+
+      if (options.returnValue) {
+        next(null, options.returnValue);
+      } else {
+        next(null, {
+          myEmail: params.email
+        });
+      }
+    };
+  } else {
+    fn = function(params) {
+
+      // test for method helpers
+      expect(this).to.have.property('ctx');
+      expect(this).to.have.deep.property('ctx._done', true);
+      expect(this).to.have.property('isSanitized', true);
+      expect(this).to.have.property('isLogin', true);
+      expect(this).to.have.deep.property('currentUser.id', 1);
+      expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
+
+      if (options.returnValue) {
+        this.ctx.json(options.returnValue);
+      } else {
+        this.ctx.json({ myEmail: params.email });
+      }
+    };
+  }
 
   return new ApiMethod('testMethod', {
     presenter: emailEntity,
@@ -354,23 +399,7 @@ function createMethod(options) {
       }
     ],
     returns: typeof options.returns === 'function' ? options.returns : null
-  }, function(params, next) {
-
-    // test for method helpers
-    expect(this).to.have.property('isValidated', true);
-    expect(this).to.have.property('isSanitized', true);
-    expect(this).to.have.property('isLogin', true);
-    expect(this).to.have.deep.property('currentUser.id', 1);
-    expect(this).to.have.deep.property('currentUser.name', 'Felix Liu');
-
-    if (options.returnValue) {
-      next(null, options.returnValue);
-    } else {
-      next(null, {
-        myEmail: params.email
-      });
-    }
-  });
+  }, fn);
 }
 
 function givenMethodExpect(options) {
@@ -396,7 +425,9 @@ function givenMethodExpect(options) {
           if (err) {
             expect(err).to.eql(options.expectedValue);
           } else {
-            expect(result).to.eql(options.expectedValue);
+            if (methodInvocation.isRestrictMode) {
+              expect(result).to.eql(options.expectedValue);
+            }
           }
           done();
         });
@@ -405,6 +436,6 @@ function givenMethodExpect(options) {
       }
     });
 
-    request(app).get('/?email=' + options.input).end();
+    request(app).get('/?email=' + options.input).expect(options.expectedValue).end();
   };
 }

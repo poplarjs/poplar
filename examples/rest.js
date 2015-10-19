@@ -81,6 +81,21 @@ UserApi.define('info', {
   });
 });
 
+UserApi.define('show', {
+  accepts: [
+    {
+      arg: 'id',
+      type: 'number',
+      required: true,
+      description: 'user id'
+    }
+  ],
+  description: 'Get user info',
+  http: { path: ':id', verb: 'get' }
+}, function(params) {
+  this.ctx.send(params);
+});
+
 UserApi.before('*', function(ctx, next) {
   console.log('before.users.* called');
   next();
@@ -93,6 +108,11 @@ UserApi.before('info', function(ctx, next) {
 
 UserApi.after('info', function(ctx, next) {
   console.log('after.users.info called');
+  next();
+});
+
+UserApi.after('*', function(ctx, next) {
+  console.log('after.users.* called');
   next();
 });
 
