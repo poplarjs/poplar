@@ -1,3 +1,6 @@
+1.3.12
+- Change Poplar global `__locals` to `Poplar.locals`
+
 1.3.11
 - Add type cast for Entity
 - Add more Dynamic converters
