@@ -1,3 +1,6 @@
+1.3.15
+- Fix Dynamic string converter
+
 1.3.14
 - Fix `ctx.method` conflicts with `ctx.request.method` bug
 
