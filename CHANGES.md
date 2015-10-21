@@ -1,3 +1,6 @@
+1.3.14
+- Fix `ctx.method` conflicts with `ctx.request.method` bug
+
 1.3.13
 - Fix `ctx.method` conflicts with `ctx.request.method` bug
 
