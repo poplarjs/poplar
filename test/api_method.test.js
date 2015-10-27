@@ -110,6 +110,24 @@ describe('ApiMethod', function() {
       });
     });
 
+    describe('#makeHref(query)', function() {
+      it('should return href with stringified query', function() {
+        var fn = function() {};
+        var apiBuilder = new ApiBuilder('topics');
+        var apiMethod = new ApiMethod('method', {
+          http: {
+            path: ':topicId\\?category=:category?'
+          }
+        }, fn);
+        apiMethod.setApiBuilder(apiBuilder);
+        expect(apiMethod.makeHref({ topicId: 2 })).to.equal('/topics/2?category=');
+        expect(function() {
+          apiMethod.makeHref({});
+        }).to.throw(TypeError);
+        expect(apiMethod.makeHref({ topicId: 2, category: 'story' })).to.equal('/topics/2?category=story');
+      });
+    });
+
     describe('#fullPath()', function() {
       it('should return fullPath with ApiBuilder', function() {
         var fn = function() {};

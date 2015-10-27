@@ -1,3 +1,6 @@
+1.3.16
+- Add `makeHref` function to ApiMethod and Poplar
+
 1.3.15
 - Fix Dynamic string converter
 
