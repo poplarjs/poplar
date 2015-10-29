@@ -1,3 +1,6 @@
+1.3.17
+- Log `Entity.parse` error without throwing out
+
 1.3.16
 - Add `makeHref` function to ApiMethod and Poplar
 
