@@ -1,3 +1,6 @@
+1.3.18
+- Add `StateManager.prototype.isFrom` method for state source checking
+
 1.3.17
 - Log `Entity.parse` error without throwing out
 

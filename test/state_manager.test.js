@@ -48,6 +48,30 @@ describe('StateManager.prototype', function() {
     });
   });
 
+  describe('#isFrom(stateName)', function() {
+    it('should return true if stateName is from previous state', function() {
+      state.transitionTo('anotherState');
+      expect(state.isFrom('initial')).to.be.true;
+    });
+
+    it('should return false if stateName is not from previous state', function() {
+      state.transitionTo('anotherState');
+      expect(state.isFrom('notAnotherState')).to.be.false;
+    });
+
+    it('should return true if stateName is a matched wildcard', function() {
+      state.transitionTo('before.users.signin');
+      state.transitionTo('users.signoff');
+      expect(state.isFrom('before.*')).to.be.true;
+    });
+
+    it('should return false if stateName is an unmatched wildcard', function() {
+      state.transitionTo('before.users.signin');
+      state.transitionTo('users.signin');
+      expect(state.is('after.*')).to.be.false;
+    });
+  });
+
   describe('#transitionTo(stateName, stateParams)', function() {
     it('should transitionTo another state with corresponding event being emitted', function(done) {
       state.transitionTo('signup', { name: 'Felix Liu', username: 'lyfeyaj' });
